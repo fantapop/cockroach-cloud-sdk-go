@@ -39,7 +39,9 @@ type Cluster struct {
 	DeleteProtection     *DeleteProtectionStateType `json:"delete_protection,omitempty"`
 	DeletedAt            *time.Time                 `json:"deleted_at,omitempty"`
 	EgressTrafficPolicy  *EgressTrafficPolicyType   `json:"egress_traffic_policy,omitempty"`
-	Id                   string                     `json:"id"`
+	// environment_id references the environment the cluster was created through. Omitted when the cluster was created outside an environment.
+	EnvironmentId *string `json:"environment_id,omitempty"`
+	Id            string  `json:"id"`
 	// labels are key-value pairs used to organize and categorize resources.
 	Labels            map[string]string      `json:"labels"`
 	Name              string                 `json:"name"`
@@ -257,6 +259,20 @@ func (o *Cluster) GetEgressTrafficPolicy() EgressTrafficPolicyType {
 // SetEgressTrafficPolicy gets a reference to the given EgressTrafficPolicyType and assigns it to the EgressTrafficPolicy field.
 func (o *Cluster) SetEgressTrafficPolicy(v EgressTrafficPolicyType) {
 	o.EgressTrafficPolicy = &v
+}
+
+// GetEnvironmentId returns the EnvironmentId field value if set, zero value otherwise.
+func (o *Cluster) GetEnvironmentId() string {
+	if o == nil || o.EnvironmentId == nil {
+		var ret string
+		return ret
+	}
+	return *o.EnvironmentId
+}
+
+// SetEnvironmentId gets a reference to the given string and assigns it to the EnvironmentId field.
+func (o *Cluster) SetEnvironmentId(v string) {
+	o.EnvironmentId = &v
 }
 
 // GetId returns the Id field value.

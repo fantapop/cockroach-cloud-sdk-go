@@ -11712,6 +11712,730 @@
         ]
       }
     },
+    "/api/v1/environments": {
+      "get": {
+        "operationId": "CockroachCloud_ListEnvironments",
+        "summary": "List the environments in the organization",
+        "description": "Can be used by the following roles assigned at the organization scope:\n- ORG_ADMIN\n- CLUSTER_ADMIN\n- CLUSTER_CREATOR\n",
+        "parameters": [
+          {
+            "name": "pagination.page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pagination.limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pagination.as_of_time",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "pagination.sort_order",
+            "in": "query",
+            "description": " - ASC: Sort in ascending order. This is the default unless otherwise specified.\n - DESC: Sort in descending order.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListEnvironmentsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when a request field is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Returned when the token bearer cannot be authenticated.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Environments"
+        ],
+        "x-badges": [
+          {
+            "color": "red",
+            "label": "LIMITED ACCESS"
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Shell + Curl",
+            "source": "curl --request GET \\\n  --url 'https://cockroachlabs.cloud/api/v1/environments?pagination.page=SOME_STRING_VALUE&pagination.limit=SOME_INTEGER_VALUE&pagination.as_of_time=SOME_STRING_VALUE&pagination.sort_order=SOME_STRING_VALUE' \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'"
+          }
+        ]
+      },
+      "post": {
+        "operationId": "CockroachCloud_CreateEnvironment",
+        "summary": "Create an environment",
+        "description": "Can be used by the following roles assigned at the organization scope:\n- ORG_ADMIN\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEnvironmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when a request field is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Returned when the token bearer cannot be authenticated.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Environments"
+        ],
+        "x-badges": [
+          {
+            "color": "red",
+            "label": "LIMITED ACCESS"
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Shell + Curl",
+            "source": "curl --request POST \\\n  --url https://cockroachlabs.cloud/api/v1/environments \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --json '{\"description\":\"Staging clusters for all app teams.\",\"name\":\"staging\",\"rules\":{\"provider\":\"GCP\"}}'"
+          }
+        ]
+      }
+    },
+    "/api/v1/environments/{environment_id}": {
+      "delete": {
+        "operationId": "CockroachCloud_DeleteEnvironment",
+        "summary": "Delete an environment",
+        "description": "Can be used by the following roles assigned at the organization scope:\n- ORG_ADMIN\n",
+        "parameters": [
+          {
+            "name": "environment_id",
+            "in": "path",
+            "description": "environment_id identifies the environment.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when a request field is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Returned when the token bearer cannot be authenticated.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Environments"
+        ],
+        "x-badges": [
+          {
+            "color": "red",
+            "label": "LIMITED ACCESS"
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Shell + Curl",
+            "source": "curl --request DELETE \\\n  --url https://cockroachlabs.cloud/api/v1/environments/{environment_id} \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'"
+          }
+        ]
+      },
+      "get": {
+        "operationId": "CockroachCloud_GetEnvironment",
+        "summary": "Get an environment by ID",
+        "description": "Can be used by the following roles assigned at the organization scope:\n- ORG_ADMIN\n- CLUSTER_ADMIN\n- CLUSTER_CREATOR\n",
+        "parameters": [
+          {
+            "name": "environment_id",
+            "in": "path",
+            "description": "environment_id identifies the environment.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when a request field is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Returned when the token bearer cannot be authenticated.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Environments"
+        ],
+        "x-badges": [
+          {
+            "color": "red",
+            "label": "LIMITED ACCESS"
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Shell + Curl",
+            "source": "curl --request GET \\\n  --url https://cockroachlabs.cloud/api/v1/environments/{environment_id} \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'"
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "CockroachCloud_UpdateEnvironment",
+        "summary": "Update an environment",
+        "description": "Can be used by the following roles assigned at the organization scope:\n- ORG_ADMIN\n",
+        "parameters": [
+          {
+            "name": "environment_id",
+            "in": "path",
+            "description": "environment_id identifies the environment.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "spec carries the fields to update.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEnvironmentSpecification"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when a request field is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Returned when the token bearer cannot be authenticated.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Environments"
+        ],
+        "x-badges": [
+          {
+            "color": "red",
+            "label": "LIMITED ACCESS"
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Shell + Curl",
+            "source": "curl --request PATCH \\\n  --url https://cockroachlabs.cloud/api/v1/environments/{environment_id} \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --json '{\"description\":\"Staging clusters for all app teams.\"}'"
+          }
+        ]
+      }
+    },
+    "/api/v1/environments/{environment_id}/clusters": {
+      "post": {
+        "operationId": "CockroachCloud_CreateClusterInEnvironment",
+        "summary": "Create a cluster in an environment, answering the questions posed by\nthe environment's creation_spec",
+        "description": "Can be used by the following roles assigned at the organization scope:\n- CLUSTER_ADMIN\n- CLUSTER_CREATOR\n",
+        "parameters": [
+          {
+            "name": "environment_id",
+            "in": "path",
+            "description": "environment_id identifies the environment to create in.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClusterInEnvironmentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cluster"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when a request field is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Returned when the token bearer cannot be authenticated.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Environments"
+        ],
+        "x-badges": [
+          {
+            "color": "red",
+            "label": "LIMITED ACCESS"
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Shell + Curl",
+            "source": "curl --request POST \\\n  --url https://cockroachlabs.cloud/api/v1/environments/{environment_id}/clusters \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --json '{\"name\":\"orders-svc\",\"regions\":[\"us-central1\"],\"vcpus\":\"10\"}'"
+          }
+        ]
+      }
+    },
+    "/api/v1/environments/{environment_id}/clusters/{cluster_id}": {
+      "patch": {
+        "operationId": "CockroachCloud_UpdateClusterInEnvironment",
+        "summary": "Update a cluster that belongs to an environment, within the bounds of\nthe environment's update_spec",
+        "description": "Can be used by the following roles assigned at the organization scope:\n- CLUSTER_ADMIN\n",
+        "parameters": [
+          {
+            "name": "environment_id",
+            "in": "path",
+            "description": "environment_id identifies the environment; the cluster must belong to it.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cluster_id",
+            "in": "path",
+            "description": "cluster_id identifies the cluster to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClusterInEnvironmentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cluster"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when a request field is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Returned when the token bearer cannot be authenticated.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Environments"
+        ],
+        "x-badges": [
+          {
+            "color": "red",
+            "label": "LIMITED ACCESS"
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Shell + Curl",
+            "source": "curl --request PATCH \\\n  --url https://cockroachlabs.cloud/api/v1/environments/{environment_id}/clusters/{cluster_id} \\\n  --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --json '{\"regions\":[\"us-east4\"],\"vcpus\":\"10\"}'"
+          }
+        ]
+      }
+    },
     "/api/v1/folders": {
       "get": {
         "operationId": "CockroachCloud_ListFolders",
@@ -14961,6 +15685,41 @@
         ],
         "title": "AllowlistEntry"
       },
+      "AllowlistEntryRule": {
+        "description": "AllowlistEntryRule is one IP allowlist entry an environment supplies or a\ncreator adds. At least one of sql or ui must be set.",
+        "type": "object",
+        "properties": {
+          "cidr": {
+            "description": "cidr is the entry in \"ip/mask\" form; a bare IP means /32. Include\n\"0.0.0.0/0\" for open-to-all.",
+            "type": "string"
+          },
+          "sql": {
+            "description": "sql grants SQL access from the range.",
+            "type": "boolean"
+          },
+          "ui": {
+            "description": "ui grants DB Console access from the range.",
+            "type": "boolean"
+          }
+        }
+      },
+      "AllowlistRule": {
+        "description": "AllowlistRule supplies IP allowlist entries created with the cluster.\nWhen present with no entries the cluster starts closed to public traffic.\nWhen absent the platform default applies (serverless starts open).",
+        "type": "object",
+        "properties": {
+          "entries": {
+            "description": "entries are created with the cluster exactly as authored here; they are\nowned by the environment.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AllowlistEntryRule"
+            }
+          },
+          "settable": {
+            "description": "settable permits the creator to supply additional entries, including\ntheir sql/ui flags.",
+            "type": "boolean"
+          }
+        }
+      },
       "Any": {
         "description": "`Any` contains an arbitrary serialized protocol buffer message along with a\nURL that describes the type of the serialized message.\n\nIn its binary encoding, an `Any` is an ordinary message; but in other wire\nforms like JSON, it has a special encoding. The format of the type URL is\ndescribed on the `type_url` field.\n\nProtobuf APIs provide utilities to interact with `Any` values:\n\n- A 'pack' operation accepts a message and constructs a generic `Any` wrapper\n  around it.\n- An 'unpack' operation reads the content of an `Any` message, either into an\n  existing message or a new one. Unpack operations must check the type of the\n  value they unpack against the declared `type_url`.\n- An 'is' operation decides whether an `Any` contains a message of the given\n  type, i.e. whether it can 'unpack' that type.\n\nThe JSON format representation of an `Any` follows one of these cases:\n\n- For types without special-cased JSON encodings, the JSON format\n  representation of the `Any` is the same as that of the message, with an\n  additional `@type` field which contains the type URL.\n- For types with special-cased JSON encodings (typically called 'well-known'\n  types, listed in https://protobuf.dev/programming-guides/json/#any), the\n  JSON format representation has a key `@type` which contains the type URL\n  and a key `value` which contains the JSON-serialized value.\n\nThe text format representation of an `Any` is like a message with one field\nwhose name is the type URL in brackets. For example, an `Any` containing a\n`foo.Bar` message may be written `[type.googleapis.com/foo.Bar] { a: 2 }`.",
         "type": "object",
@@ -15118,7 +15877,8 @@
           "AUDIT_LOG_ACTION_ENROLL_USER_MFA",
           "AUDIT_LOG_ACTION_REGENERATE_RECOVERY_CODES",
           "AUDIT_LOG_ACTION_CREATE_MIGRATION_ASSISTANT",
-          "AUDIT_LOG_ACTION_DELETE_MIGRATION_ASSISTANT"
+          "AUDIT_LOG_ACTION_DELETE_MIGRATION_ASSISTANT",
+          "AUDIT_LOG_ACTION_UPDATE_BACKUP_CONFIGURATION"
         ]
       },
       "AuditLogEntry": {
@@ -15384,6 +16144,23 @@
         ],
         "title": "BlackoutWindow"
       },
+      "BoolRule": {
+        "description": "BoolRule constrains a yes/no field. Empty allowed means both values are\npermitted and the question is asked; exactly one value owns the field.",
+        "type": "object",
+        "properties": {
+          "allowed": {
+            "description": "allowed lists the permitted values (at most two).",
+            "type": "array",
+            "items": {
+              "type": "boolean"
+            }
+          },
+          "default": {
+            "description": "default is preselected when the question is asked.",
+            "type": "boolean"
+          }
+        }
+      },
       "BuiltInFromGroups": {
         "type": "object",
         "properties": {
@@ -15530,6 +16307,20 @@
           "REVOKE_FAILED"
         ]
       },
+      "CidrRule": {
+        "description": "CidrRule supplies and optionally exposes the GCP network range.",
+        "type": "object",
+        "properties": {
+          "settable": {
+            "description": "settable permits the creator to override value.",
+            "type": "boolean"
+          },
+          "value": {
+            "description": "value is the environment-supplied cidr_range.",
+            "type": "string"
+          }
+        }
+      },
       "ClientCACertInfo": {
         "type": "object",
         "properties": {
@@ -15550,6 +16341,19 @@
           "PENDING",
           "FAILED"
         ]
+      },
+      "CloudAccountRule": {
+        "description": "CloudAccountRule supplies and optionally exposes the customer cloud\naccount. The zero state (no value, not settable) means customer cloud\naccounts are not on offer and clusters are fully managed.",
+        "type": "object",
+        "properties": {
+          "settable": {
+            "description": "settable permits the creator to supply a customer cloud account.",
+            "type": "boolean"
+          },
+          "value": {
+            "$ref": "#/components/schemas/CustomerCloudAccount"
+          }
+        }
       },
       "CloudProvider.Type": {
         "description": " - GCP: The Google Cloud Platform cloud provider.\n - AWS: The Amazon Web Services cloud provider.\n - AZURE: The Azure cloud provider.",
@@ -15667,6 +16471,10 @@
           },
           "egress_traffic_policy": {
             "$ref": "#/components/schemas/EgressTrafficPolicy.Type"
+          },
+          "environment_id": {
+            "description": "environment_id references the environment the cluster was created\nthrough. Omitted when the cluster was created outside an environment.",
+            "type": "string"
           },
           "id": {
             "type": "string"
@@ -15959,6 +16767,60 @@
           }
         }
       },
+      "ComputeIsolation.Type": {
+        "description": " - SHARED: SHARED means the cluster runs on shared infrastructure.\n - DEDICATED: DEDICATED means the cluster runs on dedicated hardware.",
+        "type": "string",
+        "enum": [
+          "SHARED",
+          "DEDICATED"
+        ]
+      },
+      "ComputeRule": {
+        "description": "ComputeRule bounds and defaults cluster compute. min == max owns the value.",
+        "type": "object",
+        "properties": {
+          "default_storage_gib": {
+            "description": "default_storage_gib is used when storage is not asked or not answered.",
+            "type": "integer",
+            "format": "int64"
+          },
+          "default_vcpus": {
+            "description": "default_vcpus is preselected when the question is asked.",
+            "type": "integer",
+            "format": "int64"
+          },
+          "isolation_allowed": {
+            "description": "isolation_allowed constrains the isolation level. Empty means both;\nexactly one value means the environment owns it. Owning DEDICATED forces\ndedicated hardware even for public clusters.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ComputeIsolation.Type"
+            }
+          },
+          "isolation_default": {
+            "$ref": "#/components/schemas/ComputeIsolation.Type"
+          },
+          "max_storage_gib": {
+            "description": "max_storage_gib bounds per-node storage; 0 means unbounded above.",
+            "type": "integer",
+            "format": "int64"
+          },
+          "max_vcpus": {
+            "description": "max_vcpus is the maximum vCPU count per cluster. 0 means unbounded above.",
+            "type": "integer",
+            "format": "int64"
+          },
+          "min_storage_gib": {
+            "description": "min_storage_gib bounds per-node storage; only meaningful when the family\nresolves dedicated. 0 means unbounded below.",
+            "type": "integer",
+            "format": "int64"
+          },
+          "min_vcpus": {
+            "description": "min_vcpus is the minimum vCPU count per cluster (provisioned vCPUs on\nserverless, machine vCPUs on dedicated). 0 means unbounded below.",
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "ConnectionStringParameters": {
         "description": "Individual parameters used to create a connection string.",
         "type": "object",
@@ -16048,6 +16910,81 @@
           "end_time"
         ],
         "title": "CreateBlackoutWindowRequest"
+      },
+      "CreateClusterInEnvironmentBody": {
+        "type": "object",
+        "properties": {
+          "allowlist_entries": {
+            "description": "allowlist_entries are additional entries, when the allowlist is settable.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AllowlistEntryRule"
+            }
+          },
+          "cidr_range": {
+            "description": "cidr_range overrides the network range, when the cidr rule is settable.",
+            "type": "string"
+          },
+          "cloud_account": {
+            "$ref": "#/components/schemas/CustomerCloudAccount"
+          },
+          "delete_protection": {
+            "$ref": "#/components/schemas/DeleteProtectionState.Type"
+          },
+          "folder_id": {
+            "description": "folder_id answers the folder question.",
+            "type": "string"
+          },
+          "isolation": {
+            "$ref": "#/components/schemas/ComputeIsolation.Type"
+          },
+          "labels": {
+            "description": "labels are creator labels, merged under the environment's label rules.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "description": "name follows the same constraints as CreateClusterRequest.name.",
+            "type": "string"
+          },
+          "network_visibility": {
+            "$ref": "#/components/schemas/NetworkVisibility.Type"
+          },
+          "regions": {
+            "description": "regions answers the region question.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "restrict_egress_traffic": {
+            "description": "restrict_egress_traffic answers the egress question.",
+            "type": "boolean"
+          },
+          "storage_gib": {
+            "description": "storage_gib answers the storage question (dedicated family only).",
+            "type": "integer",
+            "format": "int64"
+          },
+          "vcpus": {
+            "description": "vcpus answers the compute size question.",
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "example": {
+          "name": "orders-svc",
+          "regions": [
+            "us-central1"
+          ],
+          "vcpus": "10"
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreateClusterInEnvironmentRequest"
       },
       "CreateClusterRequest": {
         "type": "object",
@@ -16157,6 +17094,34 @@
           "target_service_type"
         ],
         "title": "CreateEgressPrivateEndpointRequest"
+      },
+      "CreateEnvironmentRequest": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "description should say when to use this environment.",
+            "type": "string"
+          },
+          "name": {
+            "description": "name is unique within the organization.",
+            "type": "string"
+          },
+          "rules": {
+            "$ref": "#/components/schemas/EnvironmentRules"
+          }
+        },
+        "example": {
+          "description": "Staging clusters for all app teams.",
+          "name": "staging",
+          "rules": {
+            "provider": "GCP"
+          }
+        },
+        "required": [
+          "name",
+          "rules"
+        ],
+        "title": "CreateEnvironmentRequest"
       },
       "CreateFolderRequest": {
         "type": "object",
@@ -16730,6 +17695,22 @@
         ],
         "title": "DeleteMetricExportResponse"
       },
+      "DeleteProtectionRule": {
+        "description": "DeleteProtectionRule constrains and defaults delete protection.",
+        "type": "object",
+        "properties": {
+          "allowed": {
+            "description": "allowed constrains the setting. Empty means both; one value owns it.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteProtectionState.Type"
+            }
+          },
+          "default": {
+            "$ref": "#/components/schemas/DeleteProtectionState.Type"
+          }
+        }
+      },
       "DeleteProtectionState.Type": {
         "type": "string",
         "enum": [
@@ -17131,6 +18112,200 @@
         ],
         "title": "EnableLogExportRequest"
       },
+      "Environment": {
+        "description": "Environment is a named, org-level set of rules over cluster creation and\nupdate. Creators pick an environment, answer the questions its\ncreation_spec asks, and the rules answer everything else.",
+        "type": "object",
+        "properties": {
+          "created_at": {
+            "description": "created_at is when the environment was created.",
+            "type": "string",
+            "format": "date-time"
+          },
+          "creation_spec": {
+            "description": "creation_spec is a JSON Schema (draft 2020-12) document describing the\nCreateClusterInEnvironment request body this environment accepts: one\nproperty per asked question plus name; environment-owned questions are\nabsent. required lists only the fields whose omission makes creation\nfail. Derived from rules at read time; output only.",
+            "type": "object",
+            "readOnly": true
+          },
+          "description": {
+            "description": "description should say when to use this environment, not what it\nconfigures.",
+            "type": "string"
+          },
+          "id": {
+            "description": "id uniquely identifies the environment.",
+            "type": "string"
+          },
+          "name": {
+            "description": "name is unique within the organization. Choose names creators can pick\nfrom alone, using knowledge they already have (dev, staging, prod).",
+            "type": "string"
+          },
+          "rules": {
+            "$ref": "#/components/schemas/EnvironmentRules"
+          },
+          "update_spec": {
+            "description": "update_spec is the same schema restricted to the fields\nUpdateClusterInEnvironment supports. It carries no defaults and no\nrequired list: omitting a field in an update leaves it unchanged.\nDerived from rules at read time; output only.",
+            "type": "object",
+            "readOnly": true
+          },
+          "updated_at": {
+            "description": "updated_at is when the environment was last updated.",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "example": {
+          "created_at": "2026-07-08T00:00:00Z",
+          "creation_spec": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 20,
+                "minLength": 6,
+                "pattern": "^[a-z0-9][a-z0-9-]{4,}[a-z0-9]$"
+              },
+              "regions": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "us-east4",
+                    "us-central1"
+                  ],
+                  "type": "string"
+                },
+                "maxItems": 1
+              },
+              "vcpus": {
+                "type": "integer",
+                "maximum": 15,
+                "minimum": 5
+              }
+            },
+            "required": [
+              "name",
+              "regions",
+              "vcpus"
+            ],
+            "type": "object"
+          },
+          "description": "Locked-down prod environment.",
+          "id": "9c4c8f1e-8f6a-4d4e-9df1-3f0b9a2f6f10",
+          "name": "prod-locked",
+          "rules": {
+            "compute": {
+              "isolation_allowed": [
+                "SHARED"
+              ],
+              "max_storage_gib": "100",
+              "max_vcpus": "15",
+              "min_storage_gib": "100",
+              "min_vcpus": "5"
+            },
+            "delete_protection": {
+              "allowed": [
+                "ENABLED"
+              ]
+            },
+            "folder": {
+              "allowed": [
+                "prod-folder"
+              ]
+            },
+            "labels": {
+              "supplied": {
+                "env": "prod"
+              }
+            },
+            "network": {
+              "restrict_egress_traffic": {
+                "allowed": [
+                  false
+                ]
+              },
+              "visibility_allowed": [
+                "PUBLIC"
+              ]
+            },
+            "provider": "GCP",
+            "regions": {
+              "allowed": [
+                "us-east4",
+                "us-central1"
+              ],
+              "max_region_count": 1
+            }
+          },
+          "update_spec": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "regions": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "us-east4",
+                    "us-central1"
+                  ],
+                  "type": "string"
+                },
+                "maxItems": 1
+              },
+              "vcpus": {
+                "type": "integer",
+                "maximum": 15,
+                "minimum": 5
+              }
+            },
+            "type": "object"
+          },
+          "updated_at": "2026-07-08T00:00:00Z"
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "rules",
+          "creation_spec",
+          "update_spec",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "Environment"
+      },
+      "EnvironmentRules": {
+        "description": "EnvironmentRules is the authored source of truth for an environment: for\neach field, what a creator may choose and what value the environment\nsupplies. Whether a question is asked is derived from the constraints; see\neach rule's semantics.",
+        "type": "object",
+        "properties": {
+          "allowlist": {
+            "$ref": "#/components/schemas/AllowlistRule"
+          },
+          "cidr": {
+            "$ref": "#/components/schemas/CidrRule"
+          },
+          "cloud_account": {
+            "$ref": "#/components/schemas/CloudAccountRule"
+          },
+          "compute": {
+            "$ref": "#/components/schemas/ComputeRule"
+          },
+          "delete_protection": {
+            "$ref": "#/components/schemas/DeleteProtectionRule"
+          },
+          "folder": {
+            "$ref": "#/components/schemas/FolderRule"
+          },
+          "labels": {
+            "$ref": "#/components/schemas/LabelsRule"
+          },
+          "network": {
+            "$ref": "#/components/schemas/NetworkRule"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/CloudProvider.Type"
+          },
+          "regions": {
+            "$ref": "#/components/schemas/RegionRule"
+          }
+        }
+      },
       "FolderResource": {
         "description": "FolderResource describes a resource, and includes info about its lineage (parent/ancestors).",
         "type": "object",
@@ -17201,6 +18376,23 @@
           "FOLDER",
           "CLUSTER"
         ]
+      },
+      "FolderRule": {
+        "description": "FolderRule constrains and defaults folder placement. Empty allowed means\nany folder including root.",
+        "type": "object",
+        "properties": {
+          "allowed": {
+            "description": "allowed lists permitted parent folder IDs (\"root\" for the root level).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "default is preselected when the question is asked.",
+            "type": "string"
+          }
+        }
       },
       "Gcp": {
         "type": "object",
@@ -17736,6 +18928,51 @@
           }
         }
       },
+      "LabelConstraint": {
+        "description": "LabelConstraint governs one creator label key.",
+        "type": "object",
+        "properties": {
+          "key": {
+            "description": "key is the label key being constrained.",
+            "type": "string"
+          },
+          "required": {
+            "description": "required means the creator must provide this label.",
+            "type": "boolean"
+          },
+          "values": {
+            "description": "values bounds the label's value; empty means any value.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LabelsRule": {
+        "description": "LabelsRule supplies and constrains cluster labels.",
+        "type": "object",
+        "properties": {
+          "allow_other_labels": {
+            "description": "allow_other_labels permits creator labels on keys not listed in\nconstraints.",
+            "type": "boolean"
+          },
+          "constraints": {
+            "description": "constraints govern specific creator label keys.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelConstraint"
+            }
+          },
+          "supplied": {
+            "description": "supplied labels are stamped on every cluster created in the environment\nand win key collisions with creator labels.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "LineItem": {
         "type": "object",
         "properties": {
@@ -17959,6 +19196,25 @@
           }
         },
         "title": "ListEgressRulesResponse"
+      },
+      "ListEnvironmentsResponse": {
+        "type": "object",
+        "properties": {
+          "environments": {
+            "description": "environments are the organization's environments, sorted by name.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Environment"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/KeysetPaginationResponse"
+          }
+        },
+        "required": [
+          "environments"
+        ],
+        "title": "ListEnvironmentsResponse"
       },
       "ListFoldersResponse": {
         "type": "object",
@@ -18277,6 +19533,25 @@
           "ENABLED",
           "ERROR"
         ]
+      },
+      "NetworkRule": {
+        "description": "NetworkRule constrains and defaults cluster network posture.",
+        "type": "object",
+        "properties": {
+          "restrict_egress_traffic": {
+            "$ref": "#/components/schemas/BoolRule"
+          },
+          "visibility_allowed": {
+            "description": "visibility_allowed constrains network visibility. Empty means both;\nexactly one value means the environment owns it. PRIVATE forces the\ndedicated family.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkVisibility.Type"
+            }
+          },
+          "visibility_default": {
+            "$ref": "#/components/schemas/NetworkVisibility.Type"
+          }
+        }
       },
       "NetworkVisibility.Type": {
         "type": "string",
@@ -18881,6 +20156,31 @@
           "internal_dns",
           "private_endpoint_dns"
         ]
+      },
+      "RegionRule": {
+        "description": "RegionRule constrains and defaults the regions of clusters created in an\nenvironment. Empty allowed means any region the environment's provider\noffers. Exactly one allowed region means the environment owns the choice.",
+        "type": "object",
+        "properties": {
+          "allowed": {
+            "description": "allowed lists the permitted regions of the environment's provider.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "default is preselected when the question is asked; it must be a subset\nof allowed when allowed is non-empty.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "max_region_count": {
+            "description": "max_region_count caps regions per cluster; 1 means single-region only;\n0 means no cap.",
+            "type": "integer",
+            "format": "int32"
+          }
+        }
       },
       "RegionalDisruptorSpecification": {
         "description": "RegionalDisruptorSpecification represents how a region is disrupted. To\nreduce ambiguity, a RegionalDisruptorSpecification should not represent a\nhealthy cluster - there should be at least some disrupted pods.",
@@ -19923,6 +21223,49 @@
           }
         }
       },
+      "UpdateClusterInEnvironmentBody": {
+        "type": "object",
+        "properties": {
+          "delete_protection": {
+            "$ref": "#/components/schemas/DeleteProtectionState.Type"
+          },
+          "folder_id": {
+            "description": "folder_id answers the folder question.",
+            "type": "string"
+          },
+          "labels": {
+            "description": "labels are creator labels, merged under the environment's label rules.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "regions": {
+            "description": "regions answers the region question.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "storage_gib": {
+            "description": "storage_gib answers the storage question (dedicated family only).",
+            "type": "integer",
+            "format": "int64"
+          },
+          "vcpus": {
+            "description": "vcpus answers the compute size question.",
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "example": {
+          "regions": [
+            "us-east4"
+          ],
+          "vcpus": "10"
+        },
+        "title": "UpdateClusterInEnvironmentRequest"
+      },
       "UpdateClusterSpecification": {
         "type": "object",
         "properties": {
@@ -20014,6 +21357,27 @@
           "domain_names"
         ],
         "title": "UpdateEgressPrivateEndpointRequest"
+      },
+      "UpdateEnvironmentSpecification": {
+        "description": "UpdateEnvironmentSpecification carries the mutable environment fields.\nOmitted fields are unchanged; PATCH with current contents is a no-op.",
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "description replaces the environment's description when set.",
+            "type": "string"
+          },
+          "name": {
+            "description": "name replaces the environment's name when set.",
+            "type": "string"
+          },
+          "rules": {
+            "$ref": "#/components/schemas/EnvironmentRules"
+          }
+        },
+        "example": {
+          "description": "Staging clusters for all app teams."
+        },
+        "title": "UpdateEnvironmentSpecification"
       },
       "UpdateFolderSpecification": {
         "description": "Set `parent_id` to empty string '' or 'root' to move a folder to the root level.",
@@ -20388,6 +21752,9 @@
     },
     {
       "name": "Multifactor Authentication"
+    },
+    {
+      "name": "Environments"
     }
   ],
   "externalDocs": {

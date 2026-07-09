@@ -119,6 +119,13 @@ API | Method | HTTP request | Description
 [EgressRulesApi](docs/EgressRulesApi.md) | **GetEgressRule** | **Get** /api/v1/clusters/{cluster_id}/networking/egress-rules/{rule_id} | Get an existing egress rule
 [EgressRulesApi](docs/EgressRulesApi.md) | **ListEgressRules** | **Get** /api/v1/clusters/{cluster_id}/networking/egress-rules | List all egress rules associated with a cluster
 [EgressRulesApi](docs/EgressRulesApi.md) | **SetEgressTrafficPolicy** | **Post** /api/v1/clusters/{cluster_id}/networking/egress-rules/egress-traffic-policy | Outbound traffic management
+[EnvironmentsApi](docs/EnvironmentsApi.md) | **CreateClusterInEnvironment** | **Post** /api/v1/environments/{environment_id}/clusters | Create a cluster in an environment, answering the questions posed by the environment&#39;s creation_spec
+[EnvironmentsApi](docs/EnvironmentsApi.md) | **CreateEnvironment** | **Post** /api/v1/environments | Create an environment
+[EnvironmentsApi](docs/EnvironmentsApi.md) | **DeleteEnvironment** | **Delete** /api/v1/environments/{environment_id} | Delete an environment
+[EnvironmentsApi](docs/EnvironmentsApi.md) | **GetEnvironment** | **Get** /api/v1/environments/{environment_id} | Get an environment by ID
+[EnvironmentsApi](docs/EnvironmentsApi.md) | **ListEnvironments** | **Get** /api/v1/environments | List the environments in the organization
+[EnvironmentsApi](docs/EnvironmentsApi.md) | **UpdateClusterInEnvironment** | **Patch** /api/v1/environments/{environment_id}/clusters/{cluster_id} | Update a cluster that belongs to an environment, within the bounds of the environment&#39;s update_spec
+[EnvironmentsApi](docs/EnvironmentsApi.md) | **UpdateEnvironment** | **Patch** /api/v1/environments/{environment_id} | Update an environment
 [FoldersApi](docs/FoldersApi.md) | **CreateFolder** | **Post** /api/v1/folders | Create a folder
 [FoldersApi](docs/FoldersApi.md) | **DeleteFolder** | **Delete** /api/v1/folders/{folder_id} | Delete a folder
 [FoldersApi](docs/FoldersApi.md) | **GetFolder** | **Get** /api/v1/folders/{folder_id} | Get folder info for a folder
@@ -212,3 +219,4 @@ API | Method | HTTP request | Description
 
 ## Author
 support@cockroachlabs.com
+

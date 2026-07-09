@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **DeleteProtection** | Pointer to [**DeleteProtectionStateType**](DeleteProtectionStateType.md) |  | [optional] 
 **DeletedAt** | Pointer to **time.Time** |  | [optional] 
 **EgressTrafficPolicy** | Pointer to [**EgressTrafficPolicyType**](EgressTrafficPolicyType.md) |  | [optional] 
+**EnvironmentId** | Pointer to **string** | environment_id references the environment the cluster was created through. Omitted when the cluster was created outside an environment. | [optional] 
 **Id** | **string** |  | 
 **Labels** | **map[string]string** | labels are key-value pairs used to organize and categorize resources. | 
 **Name** | **string** |  | 
@@ -191,6 +192,18 @@ GetEgressTrafficPolicy returns the EgressTrafficPolicy field if non-nil, zero va
 `func (o *Cluster) SetEgressTrafficPolicy(v EgressTrafficPolicyType)`
 
 SetEgressTrafficPolicy sets EgressTrafficPolicy field to given value.
+
+### GetEnvironmentId
+
+`func (o *Cluster) GetEnvironmentId() string`
+
+GetEnvironmentId returns the EnvironmentId field if non-nil, zero value otherwise.
+
+### SetEnvironmentId
+
+`func (o *Cluster) SetEnvironmentId(v string)`
+
+SetEnvironmentId sets EnvironmentId field to given value.
 
 ### GetId
 

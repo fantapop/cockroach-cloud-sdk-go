@@ -47,6 +47,7 @@ tags:
 - name: Backup/Restore
 - name: Egress Private Endpoints
 - name: Multifactor Authentication
+- name: Environments
 paths:
   /api/scim/v2/Groups:
     get:
@@ -8711,6 +8712,531 @@ paths:
             --url https://cockroachlabs.cloud/api/v1/clusters/{destination_cluster_id}/restores \
             --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \
             --json '{"backup_id":"1234abcd-1234-1234-abcd-12345678abcd","destination_cluster_id":"12345678-1234-1234-1234-123456789012","objects":[{"database":"database1","schema":"schema1","table":"table1"},{"database":"database1","schema":"schema1","table":"table2"}],"restore_opts":{"into_db":"database2","schema_only":true},"type":"TABLE"}'
+  /api/v1/environments:
+    get:
+      description: |
+        Can be used by the following roles assigned at the organization scope:
+        - ORG_ADMIN
+        - CLUSTER_ADMIN
+        - CLUSTER_CREATOR
+      operationId: CockroachCloud_ListEnvironments
+      parameters:
+      - explode: true
+        in: query
+        name: pagination.page
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: pagination.limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: pagination.as_of_time
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: |2-
+           - ASC: Sort in ascending order. This is the default unless otherwise specified.
+           - DESC: Sort in descending order.
+        explode: true
+        in: query
+        name: pagination.sort_order
+        required: false
+        schema:
+          enum:
+          - ASC
+          - DESC
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEnvironmentsResponse'
+          description: A successful response.
+        "400":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when a request field is invalid.
+        "401":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the token bearer cannot be authenticated.
+        "403":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the user does not have permission to access the
+            resource.
+        "404":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the resource does not exist.
+        "500":
+          content:
+            application/json:
+              schema: {}
+          description: Server error
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: An unexpected error response.
+      summary: List the environments in the organization
+      tags:
+      - Environments
+      x-badges:
+      - color: red
+        label: LIMITED ACCESS
+      x-codeSamples:
+      - lang: Shell + Curl
+        source: |-
+          curl --request GET \
+            --url 'https://cockroachlabs.cloud/api/v1/environments?pagination.page=SOME_STRING_VALUE&pagination.limit=SOME_INTEGER_VALUE&pagination.as_of_time=SOME_STRING_VALUE&pagination.sort_order=SOME_STRING_VALUE' \
+            --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'
+    post:
+      description: |
+        Can be used by the following roles assigned at the organization scope:
+        - ORG_ADMIN
+      operationId: CockroachCloud_CreateEnvironment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEnvironmentRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+          description: A successful response.
+        "400":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when a request field is invalid.
+        "401":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the token bearer cannot be authenticated.
+        "403":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the user does not have permission to access the
+            resource.
+        "404":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the resource does not exist.
+        "500":
+          content:
+            application/json:
+              schema: {}
+          description: Server error
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: An unexpected error response.
+      summary: Create an environment
+      tags:
+      - Environments
+      x-badges:
+      - color: red
+        label: LIMITED ACCESS
+      x-codeSamples:
+      - lang: Shell + Curl
+        source: |-
+          curl --request POST \
+            --url https://cockroachlabs.cloud/api/v1/environments \
+            --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \
+            --json '{"description":"Staging clusters for all app teams.","name":"staging","rules":{"provider":"GCP"}}'
+  /api/v1/environments/{environment_id}:
+    delete:
+      description: |
+        Can be used by the following roles assigned at the organization scope:
+        - ORG_ADMIN
+      operationId: CockroachCloud_DeleteEnvironment
+      parameters:
+      - description: environment_id identifies the environment.
+        explode: false
+        in: path
+        name: environment_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+          description: A successful response.
+        "400":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when a request field is invalid.
+        "401":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the token bearer cannot be authenticated.
+        "403":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the user does not have permission to access the
+            resource.
+        "404":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the resource does not exist.
+        "500":
+          content:
+            application/json:
+              schema: {}
+          description: Server error
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: An unexpected error response.
+      summary: Delete an environment
+      tags:
+      - Environments
+      x-badges:
+      - color: red
+        label: LIMITED ACCESS
+      x-codeSamples:
+      - lang: Shell + Curl
+        source: |-
+          curl --request DELETE \
+            --url https://cockroachlabs.cloud/api/v1/environments/{environment_id} \
+            --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'
+    get:
+      description: |
+        Can be used by the following roles assigned at the organization scope:
+        - ORG_ADMIN
+        - CLUSTER_ADMIN
+        - CLUSTER_CREATOR
+      operationId: CockroachCloud_GetEnvironment
+      parameters:
+      - description: environment_id identifies the environment.
+        explode: false
+        in: path
+        name: environment_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+          description: A successful response.
+        "400":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when a request field is invalid.
+        "401":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the token bearer cannot be authenticated.
+        "403":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the user does not have permission to access the
+            resource.
+        "404":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the resource does not exist.
+        "500":
+          content:
+            application/json:
+              schema: {}
+          description: Server error
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: An unexpected error response.
+      summary: Get an environment by ID
+      tags:
+      - Environments
+      x-badges:
+      - color: red
+        label: LIMITED ACCESS
+      x-codeSamples:
+      - lang: Shell + Curl
+        source: |-
+          curl --request GET \
+            --url https://cockroachlabs.cloud/api/v1/environments/{environment_id} \
+            --header 'Authorization: Bearer REPLACE_BEARER_TOKEN'
+    patch:
+      description: |
+        Can be used by the following roles assigned at the organization scope:
+        - ORG_ADMIN
+      operationId: CockroachCloud_UpdateEnvironment
+      parameters:
+      - description: environment_id identifies the environment.
+        explode: false
+        in: path
+        name: environment_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEnvironmentSpecification'
+        description: spec carries the fields to update.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+          description: A successful response.
+        "400":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when a request field is invalid.
+        "401":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the token bearer cannot be authenticated.
+        "403":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the user does not have permission to access the
+            resource.
+        "404":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the resource does not exist.
+        "500":
+          content:
+            application/json:
+              schema: {}
+          description: Server error
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: An unexpected error response.
+      summary: Update an environment
+      tags:
+      - Environments
+      x-badges:
+      - color: red
+        label: LIMITED ACCESS
+      x-codeSamples:
+      - lang: Shell + Curl
+        source: |-
+          curl --request PATCH \
+            --url https://cockroachlabs.cloud/api/v1/environments/{environment_id} \
+            --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \
+            --json '{"description":"Staging clusters for all app teams."}'
+  /api/v1/environments/{environment_id}/clusters:
+    post:
+      description: |
+        Can be used by the following roles assigned at the organization scope:
+        - CLUSTER_ADMIN
+        - CLUSTER_CREATOR
+      operationId: CockroachCloud_CreateClusterInEnvironment
+      parameters:
+      - description: environment_id identifies the environment to create in.
+        explode: false
+        in: path
+        name: environment_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClusterInEnvironmentBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+          description: A successful response.
+        "400":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when a request field is invalid.
+        "401":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the token bearer cannot be authenticated.
+        "403":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the user does not have permission to access the
+            resource.
+        "404":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the resource does not exist.
+        "500":
+          content:
+            application/json:
+              schema: {}
+          description: Server error
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: An unexpected error response.
+      summary: |-
+        Create a cluster in an environment, answering the questions posed by
+        the environment's creation_spec
+      tags:
+      - Environments
+      x-badges:
+      - color: red
+        label: LIMITED ACCESS
+      x-codeSamples:
+      - lang: Shell + Curl
+        source: |-
+          curl --request POST \
+            --url https://cockroachlabs.cloud/api/v1/environments/{environment_id}/clusters \
+            --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \
+            --json '{"name":"orders-svc","regions":["us-central1"],"vcpus":"10"}'
+  /api/v1/environments/{environment_id}/clusters/{cluster_id}:
+    patch:
+      description: |
+        Can be used by the following roles assigned at the organization scope:
+        - CLUSTER_ADMIN
+      operationId: CockroachCloud_UpdateClusterInEnvironment
+      parameters:
+      - description: environment_id identifies the environment; the cluster must belong
+          to it.
+        explode: false
+        in: path
+        name: environment_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: cluster_id identifies the cluster to update.
+        explode: false
+        in: path
+        name: cluster_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClusterInEnvironmentBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+          description: A successful response.
+        "400":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when a request field is invalid.
+        "401":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the token bearer cannot be authenticated.
+        "403":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the user does not have permission to access the
+            resource.
+        "404":
+          content:
+            application/json:
+              schema: {}
+          description: Returned when the resource does not exist.
+        "500":
+          content:
+            application/json:
+              schema: {}
+          description: Server error
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: An unexpected error response.
+      summary: |-
+        Update a cluster that belongs to an environment, within the bounds of
+        the environment's update_spec
+      tags:
+      - Environments
+      x-badges:
+      - color: red
+        label: LIMITED ACCESS
+      x-codeSamples:
+      - lang: Shell + Curl
+        source: |-
+          curl --request PATCH \
+            --url https://cockroachlabs.cloud/api/v1/environments/{environment_id}/clusters/{cluster_id} \
+            --header 'Authorization: Bearer REPLACE_BEARER_TOKEN' \
+            --json '{"regions":["us-east4"],"vcpus":"10"}'
   /api/v1/folders:
     get:
       description: |
@@ -11245,6 +11771,42 @@ components:
       - ui
       title: AllowlistEntry
       type: object
+    AllowlistEntryRule:
+      description: |-
+        AllowlistEntryRule is one IP allowlist entry an environment supplies or a
+        creator adds. At least one of sql or ui must be set.
+      properties:
+        cidr:
+          description: |-
+            cidr is the entry in "ip/mask" form; a bare IP means /32. Include
+            "0.0.0.0/0" for open-to-all.
+          type: string
+        sql:
+          description: sql grants SQL access from the range.
+          type: boolean
+        ui:
+          description: ui grants DB Console access from the range.
+          type: boolean
+      type: object
+    AllowlistRule:
+      description: |-
+        AllowlistRule supplies IP allowlist entries created with the cluster.
+        When present with no entries the cluster starts closed to public traffic.
+        When absent the platform default applies (serverless starts open).
+      properties:
+        entries:
+          description: |-
+            entries are created with the cluster exactly as authored here; they are
+            owned by the environment.
+          items:
+            $ref: '#/components/schemas/AllowlistEntryRule'
+          type: array
+        settable:
+          description: |-
+            settable permits the creator to supply additional entries, including
+            their sql/ui flags.
+          type: boolean
+      type: object
     Any:
       additionalProperties: {}
       description: |-
@@ -11450,6 +12012,7 @@ components:
       - AUDIT_LOG_ACTION_REGENERATE_RECOVERY_CODES
       - AUDIT_LOG_ACTION_CREATE_MIGRATION_ASSISTANT
       - AUDIT_LOG_ACTION_DELETE_MIGRATION_ASSISTANT
+      - AUDIT_LOG_ACTION_UPDATE_BACKUP_CONFIGURATION
       type: string
     AuditLogEntry:
       description: |-
@@ -11732,6 +12295,20 @@ components:
       - start_time
       title: BlackoutWindow
       type: object
+    BoolRule:
+      description: |-
+        BoolRule constrains a yes/no field. Empty allowed means both values are
+        permitted and the question is asked; exactly one value owns the field.
+      properties:
+        allowed:
+          description: allowed lists the permitted values (at most two).
+          items:
+            type: boolean
+          type: array
+        default:
+          description: default is preselected when the question is asked.
+          type: boolean
+      type: object
     BuiltInFromGroups:
       example:
         role:
@@ -11962,6 +12539,16 @@ components:
       - REVOKING
       - REVOKE_FAILED
       type: string
+    CidrRule:
+      description: CidrRule supplies and optionally exposes the GCP network range.
+      properties:
+        settable:
+          description: settable permits the creator to override value.
+          type: boolean
+        value:
+          description: value is the environment-supplied cidr_range.
+          type: string
+      type: object
     ClientCACertInfo:
       example:
         x509_pem_cert: x509_pem_cert
@@ -11985,6 +12572,18 @@ components:
       - PENDING
       - FAILED
       type: string
+    CloudAccountRule:
+      description: |-
+        CloudAccountRule supplies and optionally exposes the customer cloud
+        account. The zero state (no value, not settable) means customer cloud
+        accounts are not on offer and clusters are fully managed.
+      properties:
+        settable:
+          description: settable permits the creator to supply a customer cloud account.
+          type: boolean
+        value:
+          $ref: '#/components/schemas/CustomerCloudAccount'
+      type: object
     CloudProvider.Type:
       description: |2-
          - GCP: The Google Cloud Platform cloud provider.
@@ -12133,6 +12732,11 @@ components:
           type: string
         egress_traffic_policy:
           $ref: '#/components/schemas/EgressTrafficPolicy.Type'
+        environment_id:
+          description: |-
+            environment_id references the environment the cluster was created
+            through. Omitted when the cluster was created outside an environment.
+          type: string
         id:
           type: string
         labels:
@@ -12393,6 +12997,60 @@ components:
         gcp:
           $ref: '#/components/schemas/Gcp'
       type: object
+    ComputeIsolation.Type:
+      description: |2-
+         - SHARED: SHARED means the cluster runs on shared infrastructure.
+         - DEDICATED: DEDICATED means the cluster runs on dedicated hardware.
+      enum:
+      - SHARED
+      - DEDICATED
+      type: string
+    ComputeRule:
+      description: ComputeRule bounds and defaults cluster compute. min == max owns
+        the value.
+      properties:
+        default_storage_gib:
+          description: default_storage_gib is used when storage is not asked or not
+            answered.
+          format: int64
+          type: integer
+        default_vcpus:
+          description: default_vcpus is preselected when the question is asked.
+          format: int64
+          type: integer
+        isolation_allowed:
+          description: |-
+            isolation_allowed constrains the isolation level. Empty means both;
+            exactly one value means the environment owns it. Owning DEDICATED forces
+            dedicated hardware even for public clusters.
+          items:
+            $ref: '#/components/schemas/ComputeIsolation.Type'
+          type: array
+        isolation_default:
+          $ref: '#/components/schemas/ComputeIsolation.Type'
+        max_storage_gib:
+          description: max_storage_gib bounds per-node storage; 0 means unbounded
+            above.
+          format: int64
+          type: integer
+        max_vcpus:
+          description: max_vcpus is the maximum vCPU count per cluster. 0 means unbounded
+            above.
+          format: int64
+          type: integer
+        min_storage_gib:
+          description: |-
+            min_storage_gib bounds per-node storage; only meaningful when the family
+            resolves dedicated. 0 means unbounded below.
+          format: int64
+          type: integer
+        min_vcpus:
+          description: |-
+            min_vcpus is the minimum vCPU count per cluster (provisioned vCPUs on
+            serverless, machine vCPUs on dedicated). 0 means unbounded below.
+          format: int64
+          type: integer
+      type: object
     ConnectionStringParameters:
       description: Individual parameters used to create a connection string.
       example:
@@ -12479,6 +13137,64 @@ components:
       - start_time
       title: CreateBlackoutWindowRequest
       type: object
+    CreateClusterInEnvironmentBody:
+      example:
+        name: orders-svc
+        regions:
+        - us-central1
+        vcpus: "10"
+      properties:
+        allowlist_entries:
+          description: "allowlist_entries are additional entries, when the allowlist\
+            \ is settable."
+          items:
+            $ref: '#/components/schemas/AllowlistEntryRule'
+          type: array
+        cidr_range:
+          description: "cidr_range overrides the network range, when the cidr rule\
+            \ is settable."
+          type: string
+        cloud_account:
+          $ref: '#/components/schemas/CustomerCloudAccount'
+        delete_protection:
+          $ref: '#/components/schemas/DeleteProtectionState.Type'
+        folder_id:
+          description: folder_id answers the folder question.
+          type: string
+        isolation:
+          $ref: '#/components/schemas/ComputeIsolation.Type'
+        labels:
+          additionalProperties:
+            type: string
+          description: "labels are creator labels, merged under the environment's\
+            \ label rules."
+          type: object
+        name:
+          description: name follows the same constraints as CreateClusterRequest.name.
+          type: string
+        network_visibility:
+          $ref: '#/components/schemas/NetworkVisibility.Type'
+        regions:
+          description: regions answers the region question.
+          items:
+            type: string
+          type: array
+        restrict_egress_traffic:
+          description: restrict_egress_traffic answers the egress question.
+          type: boolean
+        storage_gib:
+          description: storage_gib answers the storage question (dedicated family
+            only).
+          format: int64
+          type: integer
+        vcpus:
+          description: vcpus answers the compute size question.
+          format: int64
+          type: integer
+      required:
+      - name
+      title: CreateClusterInEnvironmentRequest
+      type: object
     CreateClusterRequest:
       example:
         name: test-cluster
@@ -12563,6 +13279,26 @@ components:
       - target_service_identifier
       - target_service_type
       title: CreateEgressPrivateEndpointRequest
+      type: object
+    CreateEnvironmentRequest:
+      example:
+        description: Staging clusters for all app teams.
+        name: staging
+        rules:
+          provider: GCP
+      properties:
+        description:
+          description: description should say when to use this environment.
+          type: string
+        name:
+          description: name is unique within the organization.
+          type: string
+        rules:
+          $ref: '#/components/schemas/EnvironmentRules'
+      required:
+      - name
+      - rules
+      title: CreateEnvironmentRequest
       type: object
     CreateFolderRequest:
       example:
@@ -13114,6 +13850,18 @@ components:
       - cluster_id
       title: DeleteMetricExportResponse
       type: object
+    DeleteProtectionRule:
+      description: DeleteProtectionRule constrains and defaults delete protection.
+      properties:
+        allowed:
+          description: allowed constrains the setting. Empty means both; one value
+            owns it.
+          items:
+            $ref: '#/components/schemas/DeleteProtectionState.Type'
+          type: array
+        default:
+          $ref: '#/components/schemas/DeleteProtectionState.Type'
+      type: object
     DeleteProtectionState.Type:
       enum:
       - ENABLED
@@ -13540,6 +14288,167 @@ components:
       - type
       title: EnableLogExportRequest
       type: object
+    Environment:
+      description: |-
+        Environment is a named, org-level set of rules over cluster creation and
+        update. Creators pick an environment, answer the questions its
+        creation_spec asks, and the rules answer everything else.
+      example:
+        created_at: 2026-07-08T00:00:00Z
+        creation_spec:
+          $schema: https://json-schema.org/draft/2020-12/schema
+          properties:
+            name:
+              type: string
+              maxLength: 20
+              minLength: 6
+              pattern: "^[a-z0-9][a-z0-9-]{4,}[a-z0-9]$"
+            regions:
+              type: array
+              items:
+                enum:
+                - us-east4
+                - us-central1
+                type: string
+              maxItems: 1
+            vcpus:
+              type: integer
+              maximum: 15
+              minimum: 5
+          required:
+          - name
+          - regions
+          - vcpus
+          type: object
+        description: Locked-down prod environment.
+        id: 9c4c8f1e-8f6a-4d4e-9df1-3f0b9a2f6f10
+        name: prod-locked
+        rules:
+          compute:
+            isolation_allowed:
+            - SHARED
+            max_storage_gib: "100"
+            max_vcpus: "15"
+            min_storage_gib: "100"
+            min_vcpus: "5"
+          delete_protection:
+            allowed:
+            - ENABLED
+          folder:
+            allowed:
+            - prod-folder
+          labels:
+            supplied:
+              env: prod
+          network:
+            restrict_egress_traffic:
+              allowed:
+              - false
+            visibility_allowed:
+            - PUBLIC
+          provider: GCP
+          regions:
+            allowed:
+            - us-east4
+            - us-central1
+            max_region_count: 1
+        update_spec:
+          $schema: https://json-schema.org/draft/2020-12/schema
+          properties:
+            regions:
+              type: array
+              items:
+                enum:
+                - us-east4
+                - us-central1
+                type: string
+              maxItems: 1
+            vcpus:
+              type: integer
+              maximum: 15
+              minimum: 5
+          type: object
+        updated_at: 2026-07-08T00:00:00Z
+      properties:
+        created_at:
+          description: created_at is when the environment was created.
+          format: date-time
+          type: string
+        creation_spec:
+          description: |-
+            creation_spec is a JSON Schema (draft 2020-12) document describing the
+            CreateClusterInEnvironment request body this environment accepts: one
+            property per asked question plus name; environment-owned questions are
+            absent. required lists only the fields whose omission makes creation
+            fail. Derived from rules at read time; output only.
+          readOnly: true
+          type: object
+        description:
+          description: |-
+            description should say when to use this environment, not what it
+            configures.
+          type: string
+        id:
+          description: id uniquely identifies the environment.
+          type: string
+        name:
+          description: |-
+            name is unique within the organization. Choose names creators can pick
+            from alone, using knowledge they already have (dev, staging, prod).
+          type: string
+        rules:
+          $ref: '#/components/schemas/EnvironmentRules'
+        update_spec:
+          description: |-
+            update_spec is the same schema restricted to the fields
+            UpdateClusterInEnvironment supports. It carries no defaults and no
+            required list: omitting a field in an update leaves it unchanged.
+            Derived from rules at read time; output only.
+          readOnly: true
+          type: object
+        updated_at:
+          description: updated_at is when the environment was last updated.
+          format: date-time
+          type: string
+      required:
+      - created_at
+      - creation_spec
+      - description
+      - id
+      - name
+      - rules
+      - update_spec
+      - updated_at
+      title: Environment
+      type: object
+    EnvironmentRules:
+      description: |-
+        EnvironmentRules is the authored source of truth for an environment: for
+        each field, what a creator may choose and what value the environment
+        supplies. Whether a question is asked is derived from the constraints; see
+        each rule's semantics.
+      properties:
+        allowlist:
+          $ref: '#/components/schemas/AllowlistRule'
+        cidr:
+          $ref: '#/components/schemas/CidrRule'
+        cloud_account:
+          $ref: '#/components/schemas/CloudAccountRule'
+        compute:
+          $ref: '#/components/schemas/ComputeRule'
+        delete_protection:
+          $ref: '#/components/schemas/DeleteProtectionRule'
+        folder:
+          $ref: '#/components/schemas/FolderRule'
+        labels:
+          $ref: '#/components/schemas/LabelsRule'
+        network:
+          $ref: '#/components/schemas/NetworkRule'
+        provider:
+          $ref: '#/components/schemas/CloudProvider.Type'
+        regions:
+          $ref: '#/components/schemas/RegionRule'
+      type: object
     FolderResource:
       description: "FolderResource describes a resource, and includes info about its\
         \ lineage (parent/ancestors)."
@@ -13640,6 +14549,21 @@ components:
       - FOLDER
       - CLUSTER
       type: string
+    FolderRule:
+      description: |-
+        FolderRule constrains and defaults folder placement. Empty allowed means
+        any folder including root.
+      properties:
+        allowed:
+          description: allowed lists permitted parent folder IDs ("root" for the root
+            level).
+          items:
+            type: string
+          type: array
+        default:
+          description: default is preselected when the question is asked.
+          type: string
+      type: object
     Gcp:
       example:
         service_account_email: service_account_email
@@ -14659,6 +15583,42 @@ components:
         previous_page:
           type: string
       type: object
+    LabelConstraint:
+      description: LabelConstraint governs one creator label key.
+      properties:
+        key:
+          description: key is the label key being constrained.
+          type: string
+        required:
+          description: required means the creator must provide this label.
+          type: boolean
+        values:
+          description: values bounds the label's value; empty means any value.
+          items:
+            type: string
+          type: array
+      type: object
+    LabelsRule:
+      description: LabelsRule supplies and constrains cluster labels.
+      properties:
+        allow_other_labels:
+          description: |-
+            allow_other_labels permits creator labels on keys not listed in
+            constraints.
+          type: boolean
+        constraints:
+          description: constraints govern specific creator label keys.
+          items:
+            $ref: '#/components/schemas/LabelConstraint'
+          type: array
+        supplied:
+          additionalProperties:
+            type: string
+          description: |-
+            supplied labels are stamped on every cluster created in the environment
+            and win key collisions with creator labels.
+          type: object
+      type: object
     LineItem:
       example:
         quantity_unit: null
@@ -15072,6 +16032,175 @@ components:
             $ref: '#/components/schemas/EgressRule'
           type: array
       title: ListEgressRulesResponse
+      type: object
+    ListEnvironmentsResponse:
+      example:
+        pagination:
+          next_page: next_page
+          previous_page: previous_page
+        environments:
+        - created_at: 2026-07-08T00:00:00Z
+          creation_spec:
+            $schema: https://json-schema.org/draft/2020-12/schema
+            properties:
+              name:
+                type: string
+                maxLength: 20
+                minLength: 6
+                pattern: "^[a-z0-9][a-z0-9-]{4,}[a-z0-9]$"
+              regions:
+                type: array
+                items:
+                  enum:
+                  - us-east4
+                  - us-central1
+                  type: string
+                maxItems: 1
+              vcpus:
+                type: integer
+                maximum: 15
+                minimum: 5
+            required:
+            - name
+            - regions
+            - vcpus
+            type: object
+          description: Locked-down prod environment.
+          id: 9c4c8f1e-8f6a-4d4e-9df1-3f0b9a2f6f10
+          name: prod-locked
+          rules:
+            compute:
+              isolation_allowed:
+              - SHARED
+              max_storage_gib: "100"
+              max_vcpus: "15"
+              min_storage_gib: "100"
+              min_vcpus: "5"
+            delete_protection:
+              allowed:
+              - ENABLED
+            folder:
+              allowed:
+              - prod-folder
+            labels:
+              supplied:
+                env: prod
+            network:
+              restrict_egress_traffic:
+                allowed:
+                - false
+              visibility_allowed:
+              - PUBLIC
+            provider: GCP
+            regions:
+              allowed:
+              - us-east4
+              - us-central1
+              max_region_count: 1
+          update_spec:
+            $schema: https://json-schema.org/draft/2020-12/schema
+            properties:
+              regions:
+                type: array
+                items:
+                  enum:
+                  - us-east4
+                  - us-central1
+                  type: string
+                maxItems: 1
+              vcpus:
+                type: integer
+                maximum: 15
+                minimum: 5
+            type: object
+          updated_at: 2026-07-08T00:00:00Z
+        - created_at: 2026-07-08T00:00:00Z
+          creation_spec:
+            $schema: https://json-schema.org/draft/2020-12/schema
+            properties:
+              name:
+                type: string
+                maxLength: 20
+                minLength: 6
+                pattern: "^[a-z0-9][a-z0-9-]{4,}[a-z0-9]$"
+              regions:
+                type: array
+                items:
+                  enum:
+                  - us-east4
+                  - us-central1
+                  type: string
+                maxItems: 1
+              vcpus:
+                type: integer
+                maximum: 15
+                minimum: 5
+            required:
+            - name
+            - regions
+            - vcpus
+            type: object
+          description: Locked-down prod environment.
+          id: 9c4c8f1e-8f6a-4d4e-9df1-3f0b9a2f6f10
+          name: prod-locked
+          rules:
+            compute:
+              isolation_allowed:
+              - SHARED
+              max_storage_gib: "100"
+              max_vcpus: "15"
+              min_storage_gib: "100"
+              min_vcpus: "5"
+            delete_protection:
+              allowed:
+              - ENABLED
+            folder:
+              allowed:
+              - prod-folder
+            labels:
+              supplied:
+                env: prod
+            network:
+              restrict_egress_traffic:
+                allowed:
+                - false
+              visibility_allowed:
+              - PUBLIC
+            provider: GCP
+            regions:
+              allowed:
+              - us-east4
+              - us-central1
+              max_region_count: 1
+          update_spec:
+            $schema: https://json-schema.org/draft/2020-12/schema
+            properties:
+              regions:
+                type: array
+                items:
+                  enum:
+                  - us-east4
+                  - us-central1
+                  type: string
+                maxItems: 1
+              vcpus:
+                type: integer
+                maximum: 15
+                minimum: 5
+            type: object
+          updated_at: 2026-07-08T00:00:00Z
+      properties:
+        environments:
+          description: "environments are the organization's environments, sorted by\
+            \ name."
+          items:
+            $ref: '#/components/schemas/Environment'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/KeysetPaginationResponse'
+      required:
+      - environments
+      title: ListEnvironmentsResponse
       type: object
     ListFoldersResponse:
       example:
@@ -15936,6 +17065,22 @@ components:
       - ENABLED
       - ERROR
       type: string
+    NetworkRule:
+      description: NetworkRule constrains and defaults cluster network posture.
+      properties:
+        restrict_egress_traffic:
+          $ref: '#/components/schemas/BoolRule'
+        visibility_allowed:
+          description: |-
+            visibility_allowed constrains network visibility. Empty means both;
+            exactly one value means the environment owns it. PRIVATE forces the
+            dedicated family.
+          items:
+            $ref: '#/components/schemas/NetworkVisibility.Type'
+          type: array
+        visibility_default:
+          $ref: '#/components/schemas/NetworkVisibility.Type'
+      type: object
     NetworkVisibility.Type:
       enum:
       - PUBLIC
@@ -16588,6 +17733,31 @@ components:
       - private_endpoint_dns
       - sql_dns
       - ui_dns
+      type: object
+    RegionRule:
+      description: |-
+        RegionRule constrains and defaults the regions of clusters created in an
+        environment. Empty allowed means any region the environment's provider
+        offers. Exactly one allowed region means the environment owns the choice.
+      properties:
+        allowed:
+          description: allowed lists the permitted regions of the environment's provider.
+          items:
+            type: string
+          type: array
+        default:
+          description: |-
+            default is preselected when the question is asked; it must be a subset
+            of allowed when allowed is non-empty.
+          items:
+            type: string
+          type: array
+        max_region_count:
+          description: |-
+            max_region_count caps regions per cluster; 1 means single-region only;
+            0 means no cap.
+          format: int32
+          type: integer
       type: object
     RegionalDisruptorSpecification:
       description: |-
@@ -17636,6 +18806,39 @@ components:
             $ref: '#/components/schemas/RegionalDisruptorSpecification'
           type: array
       type: object
+    UpdateClusterInEnvironmentBody:
+      example:
+        regions:
+        - us-east4
+        vcpus: "10"
+      properties:
+        delete_protection:
+          $ref: '#/components/schemas/DeleteProtectionState.Type'
+        folder_id:
+          description: folder_id answers the folder question.
+          type: string
+        labels:
+          additionalProperties:
+            type: string
+          description: "labels are creator labels, merged under the environment's\
+            \ label rules."
+          type: object
+        regions:
+          description: regions answers the region question.
+          items:
+            type: string
+          type: array
+        storage_gib:
+          description: storage_gib answers the storage question (dedicated family
+            only).
+          format: int64
+          type: integer
+        vcpus:
+          description: vcpus answers the compute size question.
+          format: int64
+          type: integer
+      title: UpdateClusterInEnvironmentRequest
+      type: object
     UpdateClusterSpecification:
       example:
         dedicated:
@@ -17711,6 +18914,23 @@ components:
       required:
       - domain_names
       title: UpdateEgressPrivateEndpointRequest
+      type: object
+    UpdateEnvironmentSpecification:
+      description: |-
+        UpdateEnvironmentSpecification carries the mutable environment fields.
+        Omitted fields are unchanged; PATCH with current contents is a no-op.
+      example:
+        description: Staging clusters for all app teams.
+      properties:
+        description:
+          description: description replaces the environment's description when set.
+          type: string
+        name:
+          description: name replaces the environment's name when set.
+          type: string
+        rules:
+          $ref: '#/components/schemas/EnvironmentRules'
+      title: UpdateEnvironmentSpecification
       type: object
     UpdateFolderSpecification:
       description: Set `parent_id` to empty string '' or 'root' to move a folder to
